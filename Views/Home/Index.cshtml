@@ -1,0 +1,57 @@
+﻿@model IEnumerable<MVCProject.Models.EmployeeModel>
+<style>
+    .to-the-right{
+  text-align: right;
+} 
+
+</style>
+@{
+    var clientUrl = ViewBag.ClientURL as string;
+    int currentPage = ViewBag.CurrentPage??0;
+    int pageSize = ViewBag.PageSize??0;
+    int totalCount = ViewBag.TotalCount??0;
+    int totalPages = (int)Math.Ceiling((double)totalCount / pageSize) ;
+}
+
+<div class="to-the-right mb-3">
+ <a class="btn btn-success" asp-controller="Employee" asp-action="Create">Add</a>
+</div>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">Image</th scope="col">
+            <th scope="col">Name</th scope="col">
+            <th scope="col">Gender</th scope="col">
+            <th scope="col">City </th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><img class="img-thumbnail" height="100px" width="100px" src="@clientUrl@item.Images"></img></td>
+                <td>@item.Name</td>
+                <td>@item.Gender</td>
+                <td>@item.City</td>
+                <td>
+                    <a asp-controller="Employee" asp-action="Edit" asp-route-id="@item.PersonId">Edit</a> |
+                    <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.PersonId">Details</a> |
+                    <a asp-controller="Employee" asp-action="Delete" asp-route-id="@item.PersonId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <li class="page-item @(i == currentPage ? "active" : "")">
+                <a class="page-link" asp-controller="Home" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@pageSize">@i</a>
+            </li>
+        }
+    </ul>
+</nav>
